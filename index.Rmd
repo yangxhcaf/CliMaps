@@ -1,0 +1,25 @@
+---
+title: "CliMaps: An R Package to Map Gridded Climate and Exposure Data to Local Geographies" 
+author: "Ander Wilson"
+output: html_document
+---
+
+# Overview
+This is the beta version of the package CliMaps. The package currently performs 3 main functions:
+
+1. Downloads TIGER shape files from the US Census.
+
+2. Links geographies in a shape file to gridded climate or eposire data.
+
+3. Creates timeseries data for each geography.
+
+
+# Installation
+
+The CliMaps package can be installed using devtools.
+```
+library(devtools)
+install_github(repo="CliMaps", username="AnderWilson")
+library(CliMaps)
+```
+
