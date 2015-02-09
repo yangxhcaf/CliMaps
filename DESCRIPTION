@@ -1,0 +1,11 @@
+Package: CliMaps
+Title: An R Package to Map Gridded Climate and Exposure Data to Local Geographies
+Version: 0.1
+Author: Ander Wilson
+Maintainer: Ander Wilson <awilson@hsph.harvard.edu>
+Date: 2015-2-8 
+Description: An R package to: 1) download TIGER shape files from the US Census; 2) map gridded climate and exposure data to local geographies; and 3) create time series data from the linked climate and data for each geography.
+Depends: R (>= 3.1.1)
+License: GPL (>= 2) 
+LazyData: true
+Depends: plyr, data.table, RCurl, rgdal, rgeos
