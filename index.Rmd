@@ -1,7 +1,7 @@
 ---
 title: "CliMaps: An R Package to Map Gridded Climate and Exposure Data to Local Geographies" 
 author: "Ander Wilson"
-output: html_document
+output: html_document 
 ---
 
 # Overview
