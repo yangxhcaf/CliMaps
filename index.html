@@ -74,6 +74,7 @@ img {
 <li><p>Links geographies in a shape file to gridded climate or eposire data.</p></li>
 <li><p>Creates timeseries data for each geography.</p></li>
 </ol>
+<p>This is a developmental version of CliMaps. Please contact the author if you find a bug, have suggestions, or want to provide other feedback please contact the author.</p>
 </div>
 <div id="installation" class="section level1">
 <h1>Installation</h1>
@@ -81,6 +82,58 @@ img {
 <pre><code>library(devtools)
 install_github(repo=&quot;CliMaps&quot;, username=&quot;AnderWilson&quot;)
 library(CliMaps)</code></pre>
+</div>
+<div id="an-example" class="section level1">
+<h1>An Example</h1>
+<p>First, load the R package.</p>
+<pre class="r"><code>library(CliMaps)</code></pre>
+<pre><code>## Loading required package: plyr
+## Loading required package: data.table
+## Loading required package: RCurl
+## Loading required package: bitops
+## Loading required package: rgdal
+## Loading required package: sp
+## rgdal: version: 0.8-16, (SVN revision 498)
+## Geospatial Data Abstraction Library extensions to R successfully loaded
+## Loaded GDAL runtime: GDAL 1.9.2, released 2012/10/08
+## Path to GDAL shared files: /Library/Frameworks/R.framework/Versions/3.1/Resources/library/rgdal/gdal
+## Loaded PROJ.4 runtime: Rel. 4.8.0, 6 March 2012, [PJ_VERSION: 480]
+## Path to PROJ.4 shared files: /Library/Frameworks/R.framework/Versions/3.1/Resources/library/rgdal/proj
+## Loading required package: rgeos
+## rgeos version: 0.3-6, (SVN revision 450)
+##  GEOS runtime version: 3.3.3-CAPI-1.7.4 
+##  Polygon checking: TRUE</code></pre>
+<p>First, use get.tiger to download a TIGER shapefile for all states. You can add the argument loc.path to get.tiger to specify the local directory where the file will be downloaded to. This will download a file of about 3.8Mb. The function get.tiger only needs to be run to download a shapefile. If the file is already downlaaded it can be referenced and loaded with load.tiger.</p>
+<pre class="r"><code>#download TIGER state shape file for entire US
+tiger.info &lt;- get.tiger(fn = &quot;tl_2010_us_state10&quot;)</code></pre>
+<p>Load the shapefile into R with the function load.tiger. This uses the info contained in the get.tiger file.</p>
+<pre class="r"><code>#load the TIGER shapefile
+sp &lt;- load.tiger(tiger.info$path,tiger.info$fn)</code></pre>
+<pre><code>## OGR data source with driver: ESRI Shapefile 
+## Source: &quot;/Users/thomasanderwilson/Projects/CliMaps/tl_2010_us_state10&quot;, layer: &quot;tl_2010_us_state10&quot;
+## with 52 features and 14 fields
+## Feature type: wkbPolygon with 2 dimensions</code></pre>
+<p>Now that we have a shapefile we need to get exposure data. There are several publicly available shape files. For this example we can download <a href="http://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis.surface.html">NCEP/NCAR Reanalysis 1: Surface</a>. We will use the monthly mean air temperature file. Once the file is downloaded it can be opened with the ncdf package.</p>
+<pre class="r"><code>library(ncdf)
+#open the file
+datafile = open.ncdf(&quot;~/downloads/air.mon.mean.nc&quot;)
+#get the lon-lat grid and times
+lon.grid &lt;- get.var.ncdf(datafile, &quot;lon&quot;)
+lat.grid &lt;- get.var.ncdf(datafile, &quot;lat&quot;)
+time &lt;- get.var.ncdf(datafile, &quot;time&quot;)
+#get the array of data.
+data &lt;- get.var.ncdf(datafile)</code></pre>
+<p>We have data, now we can link the states to the grid with the function CliMaps. This function can be slow depending in the resolution of the shape file and grid. This example takes less than one minute on my laptop.</p>
+<pre class="r"><code>#link the data.
+link &lt;- CliMaps(sp,lon.grid,lat.grid,DT=TRUE)</code></pre>
+<p>Finally, we want to timeseries data for each geography. This is done with the CliMapsTS function.</p>
+<pre class="r"><code>#list of names for the object data.
+names &lt;- list(lon=lon.grid,lat=lat.grid,time=time)
+#make time series
+ts &lt;- CliMapsTS(link,data,names) </code></pre>
+<p>Another way to do this is to both link the data and create the time series with CliMaps</p>
+<pre class="r"><code>#link data and create time series with one function.
+linkts &lt;- CliMaps(sp,lon.grid,lat.grid,data=data,names=names,DT=TRUE)</code></pre>
 </div>
 
 

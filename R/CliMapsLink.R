@@ -60,7 +60,7 @@ CliMaps <- function(sp,lon.grid,lat.grid,data,names,DT=FALSE,IDvar,grid.toleranc
   
   #determine cell each vertex is in
   lonidf <- function(lon) return(as.numeric(which.min(pmin(abs(ll.trans(lon.grid)-ll.trans(lon)),360-abs(ll.trans(lon.grid)-ll.trans(lon))))))
-  dat.map[,lon_id:=unlist(lapply(lon, linidf))]
+  dat.map[,lon_id:=unlist(lapply(lon, lonidf))]
   latidf <- function(lat) return(as.numeric(which.min(abs(lat.grid-lat))))
   dat.map[,lat_id:=unlist(lapply(lat, latidf))]
   

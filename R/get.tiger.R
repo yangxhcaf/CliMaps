@@ -21,8 +21,9 @@
 #' 
 
 
-get.tiger <- function(fn,extent,layer,yy,src="tiger",version=2010, loc.path = ""){
-  
+get.tiger <- function(fn,extent,layer,yy,src="tiger",version=2010, loc.path){
+
+  if(missing(loc.path)) loc.path <- getwd()
   if(missing(fn)){
     if(missing(extent) & missing(layer) & missing(yy)){
       message("Either fn or extent, layer, and yy must be provided.")

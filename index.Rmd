@@ -13,6 +13,7 @@ This is the beta version of the package CliMaps. The package currently performs 
 
 3. Creates timeseries data for each geography.
 
+This is a developmental version of CliMaps. Please contact the author if you find a bug, have suggestions, or want to provide other feedback please contact the author.
 
 # Installation
 
@@ -23,3 +24,54 @@ install_github(repo="CliMaps", username="AnderWilson")
 library(CliMaps)
 ```
 
+# An Example
+First, load the R package.
+```{r}
+library(CliMaps)
+```
+
+First, use get.tiger to download a TIGER shapefile for all states. You can add the argument loc.path to get.tiger to specify the local directory where the file will be downloaded to. This will download a file of about 3.8Mb. The function get.tiger only needs to be run to download a shapefile.  If the file is already downlaaded it can be referenced and loaded with load.tiger. 
+
+```{r }
+#download TIGER state shape file for entire US
+tiger.info <- get.tiger(fn = "tl_2010_us_state10")
+```
+
+Load the shapefile into R with the function load.tiger. This uses the info contained in the get.tiger file. 
+```{r}
+#load the TIGER shapefile
+sp <- load.tiger(tiger.info$path,tiger.info$fn)
+```
+
+Now that we have a shapefile we need to get exposure data. There are several publicly available shape files. For this example we can download [NCEP/NCAR Reanalysis 1: Surface](http://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis.surface.html). We will use the monthly mean air temperature file. Once the file is downloaded it can be opened with the ncdf package.
+```{r}
+library(ncdf)
+#open the file
+datafile = open.ncdf("~/downloads/air.mon.mean.nc")
+#get the lon-lat grid and times
+lon.grid <- get.var.ncdf(datafile, "lon")
+lat.grid <- get.var.ncdf(datafile, "lat")
+time <- get.var.ncdf(datafile, "time")
+#get the array of data.
+data <- get.var.ncdf(datafile)
+```
+
+We have data, now we can link the states to the grid with the function CliMaps. This function can be slow depending in the resolution of the shape file and grid. This example takes less than one minute on my laptop.
+```{r}
+#link the data.
+link <- CliMaps(sp,lon.grid,lat.grid,DT=TRUE)
+```
+
+Finally, we want to timeseries data for each geography. This is done with the CliMapsTS function.
+```{r}
+#list of names for the object data.
+names <- list(lon=lon.grid,lat=lat.grid,time=time)
+#make time series
+ts <- CliMapsTS(link,data,names) 
+```
+
+Another way to do this is to both link the data and create the time series with CliMaps
+```{r}
+#link data and create time series with one function.
+linkts <- CliMaps(sp,lon.grid,lat.grid,data=data,names=names,DT=TRUE)
+```
