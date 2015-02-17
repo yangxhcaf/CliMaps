@@ -47,13 +47,13 @@ Now that we have a shapefile we need to get exposure data. There are several pub
 ```{r}
 library(ncdf)
 #open the file
-datafile = open.ncdf("~/downloads/air.mon.mean.nc")
+ncdf.file <- open.ncdf("~/downloads/air.mon.mean.nc")
 #get the lon-lat grid and times
-lon.grid <- get.var.ncdf(datafile, "lon")
-lat.grid <- get.var.ncdf(datafile, "lat")
-time <- get.var.ncdf(datafile, "time")
+lon.grid <- get.var.ncdf(ncdf.file, "lon")
+lat.grid <- get.var.ncdf(ncdf.file, "lat")
+time <- get.var.ncdf(ncdf.file, "time")
 #get the array of data.
-data <- get.var.ncdf(datafile)
+data <- get.var.ncdf(ncdf.file)
 ```
 
 We have data, now we can link the states to the grid with the function CliMaps. This function can be slow depending in the resolution of the shape file and grid. This example takes less than one minute on my laptop.

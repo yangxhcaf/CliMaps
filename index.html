@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -116,13 +116,13 @@ sp &lt;- load.tiger(tiger.info$path,tiger.info$fn)</code></pre>
 <p>Now that we have a shapefile we need to get exposure data. There are several publicly available shape files. For this example we can download <a href="http://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis.surface.html">NCEP/NCAR Reanalysis 1: Surface</a>. We will use the monthly mean air temperature file. Once the file is downloaded it can be opened with the ncdf package.</p>
 <pre class="r"><code>library(ncdf)
 #open the file
-datafile = open.ncdf(&quot;~/downloads/air.mon.mean.nc&quot;)
+ncdf.file &lt;- open.ncdf(&quot;~/downloads/air.mon.mean.nc&quot;)
 #get the lon-lat grid and times
-lon.grid &lt;- get.var.ncdf(datafile, &quot;lon&quot;)
-lat.grid &lt;- get.var.ncdf(datafile, &quot;lat&quot;)
-time &lt;- get.var.ncdf(datafile, &quot;time&quot;)
+lon.grid &lt;- get.var.ncdf(ncdf.file, &quot;lon&quot;)
+lat.grid &lt;- get.var.ncdf(ncdf.file, &quot;lat&quot;)
+time &lt;- get.var.ncdf(ncdf.file, &quot;time&quot;)
 #get the array of data.
-data &lt;- get.var.ncdf(datafile)</code></pre>
+data &lt;- get.var.ncdf(ncdf.file)</code></pre>
 <p>We have data, now we can link the states to the grid with the function CliMaps. This function can be slow depending in the resolution of the shape file and grid. This example takes less than one minute on my laptop.</p>
 <pre class="r"><code>#link the data.
 link &lt;- CliMaps(sp,lon.grid,lat.grid,DT=TRUE)</code></pre>
